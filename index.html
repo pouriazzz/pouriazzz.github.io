@@ -11,33 +11,32 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
     <style>
-    body {
-        font-family: 'Roboto', sans-serif;
-    }
-    #particles-js {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        z-index: 0; /* Particles in background */
-        background: transparent;
-    }
-    .content-wrapper {
-        position: relative;
-        z-index: 1; /* Content above particles visually */
-        pointer-events: none; /* Allow mouse events to pass through to particles */
-    }
-    /* Restore interactivity for links and interactive elements */
-    .content-wrapper a {
-        pointer-events: auto; /* Make links clickable */
-    }
-    /* Ensure the parent section allows overflow */
-    #about {
-        position: relative;
-        overflow: hidden;
-    }
-</style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1; /* Particles above background, below content */
+        }
+        #about {
+            position: relative;
+            overflow: hidden;
+            min-height: 400px; /* Ensure it has height */
+        }
+        .content-wrapper {
+            position: relative;
+            z-index: 2; /* Content above particles */
+        }
+        /* Ensure canvas is interactive */
+        canvas {
+            display: block;
+            pointer-events: auto !important;
+        }
+    </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
     <header class="bg-gray-800 text-white p-4 relative">
@@ -54,7 +53,7 @@
         </div>
     </header>
     <main class="container mx-auto mt-8">
-        <section id="about" class="relative bg-gray-800 p-6 rounded-lg shadow-md mb-8 min-h-[400px] overflow-hidden">
+        <section id="about" class="relative bg-gray-800 p-6 rounded-lg shadow-md mb-8">
             <div id="particles-js"></div>
             <div class="content-wrapper">
                 <h2 class="text-2xl font-bold mb-4">About Me</h2>
@@ -122,29 +121,24 @@
         </div>
     </footer>
     <script>
-        // Initialize EmailJS with proper error handling
+        // Initialize EmailJS
         (function() {
             try {
-                emailjs.init("QpYIIsZjThnFDcnzB"); // Public key
+                emailjs.init("QpYIIsZjThnFDcnzB");
             } catch (err) {
                 console.error('EmailJS initialization error:', err);
             }
         })();
 
-        // Handle form submission with improved error handling
+        // Handle form submission
         document.getElementById('contact-form').addEventListener('submit', function(event) {
             event.preventDefault();
-            
             const submitButton = this.querySelector('button[type="submit"]');
             const statusDiv = document.getElementById('submit-status');
-            
             submitButton.disabled = true;
             submitButton.textContent = 'Sending...';
-
-            // Add loading state
             statusDiv.innerHTML = '<p class="text-blue-500">Sending message...</p>';
             statusDiv.classList.remove('hidden');
-
             emailjs.sendForm('service_ced2mjn', 'template_jlq64qb', this)
                 .then(function() {
                     statusDiv.innerHTML = '<p class="text-green-500">Message sent successfully! I will get back to you soon.</p>';
@@ -160,85 +154,87 @@
                 });
         });
 
-        // Initialize particles.js
-        particlesJS('particles-js', {
-        particles: {
-        number: {
-            value: 150, // Reduced from 300 to make them more clustered
-            density: {
-                enable: true,
-                value_area: 400 // Reduced from 800 for tighter grouping
-            }
-        },
-        color: {
-            value: '#ffffff'
-        },
-        shape: {
-            type: 'circle'
-        },
-        opacity: {
-            value: 0.7,
-            random: true // Fixed capitalization (was True)
-        },
-        size: {
-            value: 3,
-            random: true
-        },
-        line_linked: {
-            enable: true,
-            distance: 80, // Reduced from 100 for closer connections
-            color: '#ffffff',
-            opacity: 0.4,
-            width: 1
-        },
-        move: {
-            enable: true,
-            speed: 3, // Slightly increased for more dynamic movement
-            direction: 'none',
-            random: true, // Fixed capitalization
-            straight: false,
-            out_mode: 'out',
-            bounce: false,
-            attract: {
-                enable: true,
-                rotateX: 600,
-                rotateY: 1200
-            }
-        }
-    },
-        interactivity: {
-            detect_on: 'canvas',
-        events: {
-            onhover: {
-                enable: true,
-                mode: ['grab', 'bubble'] // Added bubble effect for better attraction
-            },
-            onclick: {
-                enable: true,
-                mode: 'push'
-            },
-            resize: true
-        },
-        modes: {
-            grab: {
-                distance: 100, // Reduced from 140 for stronger attraction
-                line_linked: {
-                    opacity: 1
-                }
-            },
-            bubble: {  // Added bubble mode for mouse attraction
-                distance: 100,
-                size: 5,
-                duration: 2,
-                opacity: 0.8
-            },
-            push: {
-                particles_nb: 4
-            }
-        }
-    },
-    retina_detect: true
-    });
+        // Initialize particles.js with a delay to ensure DOM is loaded
+        window.addEventListener('load', function() {
+            particlesJS('particles-js', {
+                particles: {
+                    number: {
+                        value: 150,
+                        density: {
+                            enable: true,
+                            value_area: 400
+                        }
+                    },
+                    color: {
+                        value: '#ffffff'
+                    },
+                    shape: {
+                        type: 'circle'
+                    },
+                    opacity: {
+                        value: 0.7,
+                        random: true
+                    },
+                    size: {
+                        value: 3,
+                        random: true
+                    },
+                    line_linked: {
+                        enable: true,
+                        distance: 80,
+                        color: '#ffffff',
+                        opacity: 0.4,
+                        width: 1
+                    },
+                    move: {
+                        enable: true,
+                        speed: 3,
+                        direction: 'none',
+                        random: true,
+                        straight: false,
+                        out_mode: 'out',
+                        bounce: false,
+                        attract: {
+                            enable: true,
+                            rotateX: 600,
+                            rotateY: 1200
+                        }
+                    }
+                },
+                interactivity: {
+                    detect_on: 'canvas', // Detect hover on the entire canvas
+                    events: {
+                        onhover: {
+                            enable: true,
+                            mode: ['grab', 'bubble']
+                        },
+                        onclick: {
+                            enable: true,
+                            mode: 'push'
+                        },
+                        resize: true
+                    },
+                    modes: {
+                        grab: {
+                            distance: 150,
+                            line_linked: {
+                                opacity: 1
+                            }
+                        },
+                        bubble: {
+                            distance: 200,
+                            size: 6,
+                            duration: 2,
+                            opacity: 1
+                        },
+                        push: {
+                            particles_nb: 4
+                        }
+                    }
+                },
+                retina_detect: true
+            });
+        });
     </script>
 </body>
-</html> 
+</html>
