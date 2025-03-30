@@ -11,27 +11,33 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
     <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-        }
-        #particles-js {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: 1;
-            background: transparent;
-        }
-        .content-wrapper {
-            position: relative;
-            z-index: 2;
-        }
-        #about {
+    body {
+        font-family: 'Roboto', sans-serif;
+    }
+    #particles-js {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 0; /* Particles in background */
+        background: transparent;
+    }
+    .content-wrapper {
+        position: relative;
+        z-index: 1; /* Content above particles visually */
+        pointer-events: none; /* Allow mouse events to pass through to particles */
+    }
+    /* Restore interactivity for links and interactive elements */
+    .content-wrapper a {
+        pointer-events: auto; /* Make links clickable */
+    }
+    /* Ensure the parent section allows overflow */
+    #about {
         position: relative;
         overflow: hidden;
     }
-    </style>
+</style>
 </head>
 <body class="bg-gray-900 text-gray-200">
     <header class="bg-gray-800 text-white p-4 relative">
